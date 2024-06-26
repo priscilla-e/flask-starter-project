@@ -1,9 +1,12 @@
 import os
+import logging
 from dotenv import load_dotenv
 
 basedir = os.path.abspath(os.path.dirname(__file__))
 
 load_dotenv()
+
+logging.basicConfig(level=logging.DEBUG, format='%(asctime)s %(message)s')
 
 
 class Config:
