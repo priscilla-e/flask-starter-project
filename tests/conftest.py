@@ -16,6 +16,7 @@ Fixtures are created when first requested by a test, and are destroyed based on 
 @pytest.fixture(scope="session")
 def app():
     app = create_app()
+    app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory"
     return app
 
 
