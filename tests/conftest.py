@@ -16,20 +16,16 @@ Fixtures are created when first requested by a test, and are destroyed based on 
 @pytest.fixture(scope="session")
 def app():
     app = create_app()
+    app.config["TESTING"] = True
     app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///:memory"
     return app
 
 
-@pytest.fixture(scope="session")
-def client(app):
-    return app.test_client()
-
-
 @pytest.fixture(scope="function")
-def db_session(app):
-    from app.extensions import db
-
-    yield db.session
-    db.drop_all()
-    db.session.close()
-
+def client(app):
+    with app.test_client() as client:
+        with app.app_context():
+            db.create_all()
+            yield client
+            db.session.remove()
+            db.drop_all()
